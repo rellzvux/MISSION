@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buka Kunci Akses | XeraCrash</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  canvas#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+  }
+
+  h2 {
+    font-size: 22px;
+    color: #0ff;
+    margin-bottom: 15px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #111;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 16px;
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(90deg, #3a00ff, #a000ff, #00ffff);
+    background-size: 200% 200%;
+    animation: gradientMove 3s ease infinite;
+    transition: transform 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .link-box {
+    margin-top: 20px;
+    display: none;
+  }
+
+  .link-box a {
+    color: #0ff;
+    word-break: break-all;
+    text-decoration: none;
+  }
+
+  .error {
+    color: #f33;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<div class="popup">
+  <h2>YOUR LINK ALREADY</h2>
+  <p>INPUT PASSWORD TO GET LINK</p>
+  <input type="password" id="password" placeholder="Enter Password...">
+  <button onclick="checkPassword()">UNLOCK LINK</button>
+  <div id="error" class="error"></div>
+
+  <div class="link-box" id="linkBox">
+    <p><strong>LINK DOWNLOAD:</strong></p>
+    <a id="downloadLink" href="https://safefileku.com/download/0JUPDgJpMCXFjp8S" target="_blank">https://safefileku.com/download/0JUPDgJpMCXFjp8S</a>
+  </div>
+</div>
+
+<script>
+  // Password Check + Open Link Auto
+  function checkPassword() {
+    const input = document.getElementById("password").value.trim();
+    const err = document.getElementById("error");
+    const linkBox = document.getElementById("linkBox");
+    if (input === "XERA") {
+      err.textContent = "";
+      linkBox.style.display = "block";
+      setTimeout(() => {
+        window.open("https://safefileku.com/download/0JUPDgJpMCXFjp8S", "_blank");
+      }, 1000);
+    } else {
+      err.textContent = "❌ Password salah, coba lagi!";
+    }
+  }
+
+  // Background Particle Animation
+  const canvas = document.getElementById("bgCanvas");
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const count = window.innerWidth < 600 ? 60 : 120;
+    particles = [];
+    for (let i=0;i<count;i++) {
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        vx: (Math.random()-0.5)*1,
+        vy: (Math.random()-0.5)*1,
+        r: 1.2
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for (let p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x<0||p.x>canvas.width) p.vx*=-1;
+      if (p.y<0||p.y>canvas.height) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,2*Math.PI);
+      ctx.fillStyle="white";
+      ctx.fill();
+    }
+    for (let i=0;i<particles.length;i++) {
+      for (let j=i+1;j<particles.length;j++) {
+        let dx = particles[i].x - particles[j].x;
+        let dy = particles[i].y - particles[j].y;
+        let dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist<120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle="rgba(255,255,255,0.2)";
+          ctx.lineWidth = 0.3;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  animate();
+</script>
+</body>
+</html>
